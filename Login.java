@@ -1,8 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Timer;
-import java.util.TimerTask;
 
 class Login extends JFrame implements ActionListener {
 
@@ -10,13 +8,12 @@ class Login extends JFrame implements ActionListener {
     JLabel userLabel, passLabel, messageLabel;
     JTextField usernameField;
     JPasswordField passwordField;
-    Timer timer;
     int loginAttempts = 0;
 
     Login() {
         setTitle("Login Form");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(400, 250);
+        setSize(400, 300);
         setLocationRelativeTo(null);
         setResizable(false);
 
@@ -41,21 +38,22 @@ class Login extends JFrame implements ActionListener {
         panel.add(passwordField);
 
         loginButton = new JButton("Login");
-        loginButton.setBounds(150, 110, 80, 25);
+        loginButton.setBounds(100, 110, 80, 30);
         panel.add(loginButton);
 
         registerButton = new JButton("Register");
-        registerButton.setBounds(240, 110, 100, 25);
+        registerButton.setBounds(190, 110, 100, 30);
         panel.add(registerButton);
 
         resetButton = new JButton("Reset Password");
-        resetButton.setBounds(150, 150, 190, 25);
+        resetButton.setBounds(100, 160, 190, 30);
         panel.add(resetButton);
 
         messageLabel = new JLabel();
-        messageLabel.setBounds(50, 190, 300, 25);
+        messageLabel.setBounds(50, 200, 300, 25);
         panel.add(messageLabel);
 
+        // Add ActionListener to buttons
         loginButton.addActionListener(this);
         registerButton.addActionListener(this);
         resetButton.addActionListener(this);
@@ -71,8 +69,8 @@ class Login extends JFrame implements ActionListener {
 
             if (username.equals("admin") && password.equals("admin")) {
                 JOptionPane.showMessageDialog(this, "Login Successful!");
-                dispose();
-                new OnlineTestBegin(username);
+                dispose(); // Close the login window
+                new OnlineTestBegin(username); // Open the online test window
             } else {
                 loginAttempts++;
                 if (loginAttempts >= 3) {
@@ -84,33 +82,27 @@ class Login extends JFrame implements ActionListener {
                 }
             }
         } else if (ae.getSource() == registerButton) {
-            String newUsername = JOptionPane.showInputDialog(this, "Enter new username:");
-            if (newUsername != null && !newUsername.isEmpty()) {
-                // Here you would normally add code to save the new username to a database or file.
-                String newPassword = JOptionPane.showInputDialog(this, "Enter new password:");
-                if (newPassword != null && !newPassword.isEmpty()) {
-                    // Here you would normally add code to save the new password for the new username.
-                    JOptionPane.showMessageDialog(this, "Registration Successful!");
-                } else {
-                    JOptionPane.showMessageDialog(this, "Password cannot be empty. Registration failed.");
-                }
-            } else {
-                JOptionPane.showMessageDialog(this, "Username cannot be empty. Registration failed.");
-            }
+            // Placeholder for registration functionality
+            JOptionPane.showMessageDialog(this, "Registration is not implemented yet.");
+            // Add your registration code here
+            // Example: new RegistrationForm();
         } else if (ae.getSource() == resetButton) {
-            String username = JOptionPane.showInputDialog(this, "Enter your username to reset password:");
-            if (username != null && !username.isEmpty()) {
-                // Here you would normally add code to check if the username exists in the database or file.
-                String newPassword = JOptionPane.showInputDialog(this, "Enter new password:");
-                if (newPassword != null && !newPassword.isEmpty()) {
-                    // Here you would normally add code to update the password for the specified username.
-                    JOptionPane.showMessageDialog(this, "Password Reset Successful!");
-                } else {
-                    JOptionPane.showMessageDialog(this, "Password cannot be empty. Reset failed.");
+            // Placeholder for password reset functionality
+            JOptionPane.showMessageDialog(this, "Password reset is not implemented yet.");
+            // Add your password reset code here
+            // Example: new ResetPasswordForm();
+        }
+    }
+
+    public static void main(String[] args) {
+        try {
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    new Login();
                 }
-            } else {
-                JOptionPane.showMessageDialog(this, "Username cannot be empty. Reset failed.");
-            }
+            });
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
         }
     }
 }
@@ -122,13 +114,11 @@ class OnlineTestBegin extends JFrame implements ActionListener {
     JButton nextButton, submitButton;
     ButtonGroup optionGroup;
     int count = 0, current = 0;
-    Timer timer = new Timer();
-    TimerTask task;
 
     OnlineTestBegin(String username) {
         setTitle("Online Test - Welcome " + username);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(500, 400);
+        setSize(600, 400);
         setLocationRelativeTo(null);
 
         JPanel panel = new JPanel();
@@ -160,20 +150,6 @@ class OnlineTestBegin extends JFrame implements ActionListener {
         panel.add(timeLabel);
 
         setQuestion(current);
-
-        task = new TimerTask() {
-            int timeLeft = 600;
-
-            public void run() {
-                timeLabel.setText("Time left: " + timeLeft);
-                timeLeft--;
-                if (timeLeft < 0) {
-                    timer.cancel();
-                    submitAnswers();
-                }
-            }
-        };
-        timer.scheduleAtFixedRate(task, 0, 1000);
 
         setVisible(true);
     }
@@ -295,9 +271,7 @@ class OnlineTestBegin extends JFrame implements ActionListener {
         return false;
     }
 
-
     void submitAnswers() {
-        timer.cancel(); // Stop the timer
         JOptionPane.showMessageDialog(this, "Score = " + count);
         System.exit(0);
     }
